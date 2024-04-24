@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "473501370378",
+    "firebase_url": "https://mpati-84380-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "mpati-84380",
+    "storage_bucket": "mpati-84380.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473501370378:android:ac95f1f55bf67e414337f3",
+        "android_client_info": {
+          "package_name": "com.example.mpati_pet_care"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "473501370378-o5pauj7q8pc9sgre8bdv9b5bnsq3nqgo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mpati_pet_care",
+            "certificate_hash": "a3d92284e5f971bbd0e515b37d2455686a282d0a"
+          }
+        },
+        {
+          "client_id": "473501370378-tqcbmb685lf9o8stigt7knqb3dgenn4m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCuR09j126lPb0HWCL9b-qi7Mq1u6JfE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "473501370378-tqcbmb685lf9o8stigt7knqb3dgenn4m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "473501370378-hpmeblpq2ve5a7i50784kt330c9rjs87.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mpatiPetCare"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
