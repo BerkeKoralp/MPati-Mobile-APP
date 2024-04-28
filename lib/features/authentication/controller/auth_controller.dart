@@ -37,8 +37,16 @@ class AuthController extends StateNotifier<bool>{
 
   Stream<User?> get authStateChange => _authRepository.authStateChange;
 
+  void signUpWithEmailAndPassword (BuildContext context, {required String email, required String password})async{
+    state = true;
+    _ref.read(authRepositoryProvider).signupWithEmailAndPassword(email: email, password: password);
+    state = false;
+
+  }
   void signInWithEmailAndPassword (BuildContext context,{required String email, required String password}) async {
     state = true;
+    print(email);
+
     final user= await _authRepository.signInWithEmailAndPassword(email, password);
     state = false;
     user.fold(
@@ -46,7 +54,6 @@ class AuthController extends StateNotifier<bool>{
           (userModel) => _ref.read(userProvider.notifier).update((state) => userModel),
     );
   }
-
   void signInWithGoogle(BuildContext context) async {
     state= true;
     final user = await _authRepository.signInWithGoogle();

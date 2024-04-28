@@ -1,8 +1,7 @@
 
 import 'dart:convert';
-import 'dart:ffi';
+import 'dart:core';
 
-import 'pet_model.dart';
 class  UserModel {
   final String? name;
   final String? mail;
@@ -13,6 +12,8 @@ class  UserModel {
   final bool? isAuthenticated;
   final String? address;
   final String? type;
+  final List<String> bills;
+  final List<String> pets;
 
 //<editor-fold desc="Data Methods">
   const UserModel({
@@ -25,6 +26,8 @@ class  UserModel {
     this.isAuthenticated,
     this.address,
     this.type,
+    required this.bills,
+    required this.pets,
   });
 
   @override
@@ -40,7 +43,9 @@ class  UserModel {
           balance == other.balance &&
           isAuthenticated == other.isAuthenticated &&
           address == other.address &&
-          type == other.type);
+          type == other.type &&
+          bills == other.bills &&
+          pets == other.pets);
 
   @override
   int get hashCode =>
@@ -52,7 +57,9 @@ class  UserModel {
       balance.hashCode ^
       isAuthenticated.hashCode ^
       address.hashCode ^
-      type.hashCode;
+      type.hashCode ^
+      bills.hashCode ^
+      pets.hashCode;
 
   @override
   String toString() {
@@ -66,6 +73,8 @@ class  UserModel {
         ' isAuthenticated: $isAuthenticated,' +
         ' address: $address,' +
         ' type: $type,' +
+        ' bills: $bills,' +
+        ' pets: $pets,' +
         '}';
   }
 
@@ -79,6 +88,8 @@ class  UserModel {
     bool? isAuthenticated,
     String? address,
     String? type,
+    List<String>? bills,
+    List<String>? pets,
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -90,6 +101,8 @@ class  UserModel {
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       address: address ?? this.address,
       type: type ?? this.type,
+      bills: bills ?? this.bills,
+      pets: pets ?? this.pets,
     );
   }
 
@@ -104,24 +117,29 @@ class  UserModel {
       'isAuthenticated': this.isAuthenticated,
       'address': this.address,
       'type': this.type,
+      'bills': this.bills,
+      'pets': this.pets,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      name: map['name'] ?? '',
-      mail: map['mail'] ?? '',
-      password: map['password'] ?? '',
-      profilePic: map['profilePic'] ?? '',
-      uid: map['uid'] ?? '',
-      balance: map['balance']?.toInt() ?? 0 ,
-      isAuthenticated: map['isAuthenticated'] ?? false,
-      address: map['address'] ?? '',
-      type: map['type'] ?? '',
+      name: map['name']  ?? '',
+      mail: map['mail']  ?? '',
+      password: map['password']  ?? '',
+      profilePic: map['profilePic']  ?? '',
+      uid: map['uid']  ?? '',
+      balance: map['balance']  ?? '',
+      isAuthenticated: map['isAuthenticated']  ?? '',
+      address: map['address']  ?? '',
+      type: map['type']  ?? '',
+      bills:(map['bills'] != null) ? List<String>.from(map['bills']) : [],
+      pets: (map['pets'] != null) ? List<String>.from(map['pets']) : [],
     );
   }
   String toJson() => json.encode(toMap());
 
   factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source));
+
 //</editor-fold>
 }

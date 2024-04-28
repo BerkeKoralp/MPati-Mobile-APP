@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mpati_pet_care/core/common/login_email_button.dart';
 import 'package:mpati_pet_care/core/constants/constants.dart';
 import 'package:mpati_pet_care/features/authentication/controller/auth_controller.dart';
 import 'package:mpati_pet_care/theme/palette.dart';
+import 'package:routemaster/routemaster.dart';
 
 import '../../../core/common/sign_in_button.dart';
 
@@ -83,17 +85,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       'Forgot Password',
                     ),
                   ),
-                  Container(
-                      height: 50,
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: ElevatedButton(
-                        child: const Text('Login'),
-                        onPressed: () {
-                          ref
-                              .read(authControllerProvider.notifier)
-                              .signInWithEmailAndPassword(context,email:emailController.text, password:passwordController.text);
-                        },
-                      )),
+                 LoginEmailButton(emailController.text, passwordController.text),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -103,9 +95,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           'Sign in',
                           style: TextStyle(fontSize: 20),
                         ),
-                        onPressed: () {
-                          //signup screen
-                        },
+                        onPressed: () =>  Routemaster.of(context).push('/create-account') ,
                       )
                     ],
                   ),const SignInButton()

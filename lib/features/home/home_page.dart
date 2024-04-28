@@ -65,14 +65,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body:
       SingleChildScrollView(
         //Main Column Elements
-        child: Column(
-          children: [
-            Services(
-                firstBox: "Request Service",secondBox: "Previous Service",
-                thirdBox: "Explore Caretakers",fourthBox: "Bills"
-            ),
-
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(45.0),
+          child: Column(
+            children: [
+              Services(
+                  firstBox: "Show Caretakers\nOn Map",
+                  secondBox: "Previous Service",
+                  thirdBox: "Explore Caretakers",
+                  fourthBox: "Bills"
+              ),
+              //Other thins can be put here
+            ],
+          ),
         ),
       ),
       bottomNavigationBar:  NavigationBarPet(),

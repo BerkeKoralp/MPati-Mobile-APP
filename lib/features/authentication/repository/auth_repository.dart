@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mpati_pet_care/models/pet_owner_model.dart';
+
 
 import '../../../core/constants/constants.dart';
 import '../../../core/constants/firebase_constants.dart';
@@ -56,6 +56,8 @@ class AuthRepository{
           balance:0,
           address: '',
           type: '',
+          bills: [],
+          pets: [],
         );
         await  _users.doc(userModel.uid).set(userModel.toMap());
       }else {
@@ -71,9 +73,15 @@ class AuthRepository{
 
   FutureEither<UserModel> signInWithEmailAndPassword(
       String email, String password) async {
+    print("repositoyrydeki");
+
+    print(email+"123hi");
     UserModel userModel ;
     try {
+      print('burası authentication with email kısmı');
       final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+      print(credential.user!.email);
       userModel = await getUserData(credential.user!.uid).first;
       return right(userModel);
     } on FirebaseAuthException catch (e) {
@@ -109,6 +117,8 @@ class AuthRepository{
             balance:  0 ,
             address: '',
             type: '',
+          bills: [],
+          pets: [],
         );
         await  _users.doc(userModel.uid).set(userModel.toMap());
       }else{
