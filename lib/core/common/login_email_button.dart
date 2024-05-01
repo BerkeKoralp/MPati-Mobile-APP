@@ -11,28 +11,30 @@ class LoginEmailButton extends ConsumerWidget {
   const LoginEmailButton(this.email, this.password, {super.key});
 
   void signInWithEmail(WidgetRef ref,BuildContext context,
-      {required String email, required String password}) {
+      {required String email, required String password,required String type}) {
    print("buttondaki");
 
    if (kDebugMode) {
       print(password);
     }
     print("buttondaki");
-
     ref.read(authControllerProvider.notifier).
     signInWithEmailAndPassword(
         context,
         email: email,
-        password: password);
+        password: password,
+        type: type);
   }
-
   @override
   Widget build(BuildContext context,WidgetRef ref) {
-    final user= ref.watch(userProvider.notifier);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton.icon(
-        onPressed: () => signInWithEmail(ref, context, email: this.email, password: this.password),
+        onPressed: () => signInWithEmail(ref, context,
+            email: this.email,
+            password: this.password,
+            type: ref.watch(typeOfAccountProvider)
+        ),
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           backgroundColor: Colors.blue,

@@ -8,6 +8,7 @@ import 'package:mpati_pet_care/features/home/home_page.dart';
 import 'package:mpati_pet_care/features/map/repository/map_code.dart';
 import 'package:routemaster/routemaster.dart';
 
+import 'features/balance/screen/balance_page.dart';
 import 'features/map/screen/map_screen.dart';
 
 final loggedOutRoute = RouteMap(
@@ -16,12 +17,14 @@ final loggedOutRoute = RouteMap(
       '/create-account' :(_) => MaterialPage(
           child: CreateAccountScreen(
           )
-      )
+      ),
+
     }
 );
 final loggedInRoute = RouteMap(
     routes: {
       '/' : (_) => const MaterialPage(child: HomeScreen()),
-      '/map-screen': (_) =>  const MaterialPage(child: MapScreenCustom())
+      '/map-screen': (_) =>  const MaterialPage(child: MapScreenCustom()),
+      '/balance-page' :(_) => const MaterialPage(child: BalancePage())
     }
 );

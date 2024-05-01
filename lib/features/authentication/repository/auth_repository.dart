@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mpati_pet_care/features/authentication/controller/auth_controller.dart';
+import 'package:mpati_pet_care/models/base_model.dart';
+import 'package:mpati_pet_care/models/pet_caretaker_model.dart';
 
 
 import '../../../core/constants/constants.dart';
@@ -35,61 +38,88 @@ class AuthRepository{
 
   Stream<User?> get authStateChange => _auth.authStateChanges();
   CollectionReference get _users => _firestore.collection(FirebaseConstants.usersCollection);
-  // CollectionReference get _owners => _firestore.collection(FirebaseConstants.petOwnerCollection);
-  // CollectionReference get _caretakers => _firestore.collection(FirebaseConstants.petCareTakerCollection);
+  CollectionReference get _caretakers => _firestore.collection(FirebaseConstants.petCareTakerCollection);
 
-  FutureEither<UserModel> signupWithEmailAndPassword(
-      {required String email, required String password}) async {
-    UserModel userModel;
+  FutureEither<BaseModel> signupWithEmailAndPassword(
+      {required String email, required String password,required String type}) async {
+    BaseModel? baseModel;
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-
-      if(credential.additionalUserInfo!.isNewUser){
-
-        userModel = UserModel(
-          name: credential.user!.displayName??'No name',
-          profilePic: credential.user!.photoURL??Constants.avatarDefault,
-          uid: credential.user!.uid,
-          mail: credential.user!.email,
-          isAuthenticated: true,
-          balance:0,
-          address: '',
-          type: '',
-          bills: [],
-          pets: [],
-        );
-        await  _users.doc(userModel.uid).set(userModel.toMap());
-      }else {
-        //IF USER EXİST
-        userModel =await getUserData(credential.user!.uid).first;
+      String collectionName = _getCollectionNameByRole(type);
+      //Collection name got and then search for person in each available collection
+      switch (collectionName) {
+        case "owner":
+          if (credential.additionalUserInfo!.isNewUser) {
+            baseModel = UserModel(
+              name: credential.user!.displayName ?? 'No name',
+              profilePic: credential.user!.photoURL ?? Constants.avatarDefault,
+              uid: credential.user!.uid,
+              mail: credential.user!.email,
+              isAuthenticated: true,
+              balance: 0,
+              address: '',
+              type: type,
+              bills: [],
+              pets: [],
+            );
+            await _users.doc(baseModel.uid).set(baseModel.toMap());
+          }
+          break;
+        case "caretaker":
+          if (credential.additionalUserInfo!.isNewUser) {
+            baseModel = PetCareTakerModel(
+              name: credential.user!.displayName ?? 'No name',
+              profilePic: credential.user!.photoURL ?? Constants.avatarDefault,
+              uid: credential.user!.uid,
+              mail: credential.user!.email,
+              isAuthenticated: true,
+              balance: 0,
+              address: '',
+              type: type,
+              bills: [],
+              session: [],
+            );
+            await _caretakers.doc(baseModel.uid).set(baseModel.toMap());
+          }
+          break;
+        default:
+        // Handle unknown user types or logic when none of the cases match
+          throw Exception("Unhandled user type: $type");
       }
-
-      return right(userModel);
+      // return right(baseModel);
+      return right(baseModel!);
     } on FirebaseAuthException catch (e) {
       return left(Failure(e.toString()));
     }
   }
-
-  FutureEither<UserModel> signInWithEmailAndPassword(
-      String email, String password) async {
-    print("repositoyrydeki");
-
-    print(email+"123hi");
-    UserModel userModel ;
+  Stream<BaseModel>? findUserInRoleCollections(String uid)  {
+    List<String> roleCollections = ['owner', 'caretaker'];  // Add all your role collections here
+    for (String collection in roleCollections) {
+      if(collection == 'owner'){
+        return _users.doc(uid).snapshots().map((event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
+      }else{
+        return _caretakers.doc(uid).snapshots().map((event) => PetCareTakerModel.fromMap(event.data() as Map<String, dynamic>));
+      }
+        }
+    return null ;
+  }
+  FutureEither<BaseModel> signInWithEmailAndPassword(
+      String email, String password,String type) async {
+    BaseModel? baseModel ;
     try {
-      print('burası authentication with email kısmı');
-      final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
-
-      print(credential.user!.email);
-      userModel = await getUserData(credential.user!.uid).first;
-      return right(userModel);
+      final credential = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      String collectionName = _getCollectionNameByRole(type);
+      //Collection name got and then search for person in each available collection
+      baseModel = await findUserInRoleCollections(credential.user!.uid)!.first;
+      return right(baseModel);
     } on FirebaseAuthException catch (e) {
       return left(Failure(e.toString()));
     }
   }
 
-  FutureEither<UserModel> signInWithGoogle() async  {
+  FutureEither<BaseModel> signInWithGoogle({required String type}) async  {
     try{
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
@@ -101,31 +131,55 @@ class AuthRepository{
       );
       //We create credential so that firebase authentication store google sign in data in
       //in the console
-
       UserCredential userCredential =await _auth.signInWithCredential(credential);
-      UserModel userModel;
-
-      if(userCredential.additionalUserInfo!.isNewUser){
-        //Check the role,
-
-        userModel = UserModel(
-          name: userCredential.user!.displayName??'No name',
-            profilePic: userCredential.user!.photoURL??Constants.avatarDefault,
-            uid: userCredential.user!.uid,
-            mail: userCredential.user!.email,
-            isAuthenticated: true,
-            balance:  0 ,
-            address: '',
-            type: '',
-          bills: [],
-          pets: [],
-        );
-        await  _users.doc(userModel.uid).set(userModel.toMap());
-      }else{
-        //IF THE USER EXİST
-        userModel =await getUserData(userCredential.user!.uid).first;
+      BaseModel? baseModel;
+      String collectionName = _getCollectionNameByRole(type);
+      switch (collectionName) {
+        case "owner":
+          if (userCredential.additionalUserInfo!.isNewUser) {
+            baseModel = UserModel(
+              name: userCredential.user!.displayName ?? 'No name',
+              profilePic: userCredential.user!.photoURL ?? Constants.avatarDefault,
+              uid: userCredential.user!.uid,
+              mail: userCredential.user!.email,
+              isAuthenticated: true,
+              balance: 0,
+              address: '',
+              type: collectionName,
+              bills: [],
+              pets: [],
+            );
+            await _users.doc(baseModel.uid).set(baseModel.toMap());
+          } else {
+            // If user exists
+            baseModel = await findUserInRoleCollections(userCredential.user!.uid)!.first;
+          }
+          break;
+        case "caretaker":
+          if (userCredential.additionalUserInfo!.isNewUser) {
+            baseModel = PetCareTakerModel(
+              name: userCredential.user!.displayName ?? 'No name',
+              profilePic: userCredential.user!.photoURL ?? Constants.avatarDefault,
+              uid: userCredential.user!.uid,
+              mail: userCredential.user!.email,
+              isAuthenticated: true,
+              balance: 0,
+              address: '',
+              type: collectionName,
+              bills: [],
+              session: [],
+            );
+            await _caretakers.doc(baseModel.uid).set(baseModel.toMap());
+          } else {
+            // If user exists
+            baseModel = await findUserInRoleCollections(userCredential.user!.uid)!.first;
+          }
+          break;
+        default:
+        // Handle unknown user types or logic when none of the cases match
+          throw Exception("Unhandled user type: $type");
       }
-      return right(userModel);
+      return right(baseModel!);
     }on FirebaseException catch (e){
       throw e.message!;
     }
@@ -133,8 +187,16 @@ class AuthRepository{
       return left(Failure(e.toString()));
     }
   }
-  Stream<UserModel> getUserData(String uid){
-    return _users.doc(uid).snapshots().map((event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
+
+  String _getCollectionNameByRole(String role) {
+    switch (role) {
+      case 'owner':
+        return 'owner';
+      case 'caretaker':
+        return 'caretaker';
+      default:
+        return 'owner';
+    }
   }
   void logOut() async {
     await _googleSignIn.signOut();

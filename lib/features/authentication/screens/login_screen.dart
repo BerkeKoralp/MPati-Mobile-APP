@@ -18,9 +18,21 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String groupValue = ref.watch(typeOfAccountProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Palette.nutellaBrown,
@@ -59,6 +71,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
+                      key: Key('email-field'), // Key added
+                      autofocus: true,
+                      focusNode: emailFocusNode,
                       controller: emailController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -69,7 +84,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                     child: TextField(
+                      key: Key('password-field'), // Key added
                       obscureText: true,
+                      focusNode: passwordFocusNode,
                       controller: passwordController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -85,7 +102,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       'Forgot Password',
                     ),
                   ),
+                  Column(
+                    children: <Widget>[
+                      RadioListTile<String>(
+                        title: const Text('Owner'),
+                        value: 'owner',
+                        groupValue: groupValue,
+                        onChanged: (value) {
+                          ref.read(typeOfAccountProvider.notifier).update((state) => value!) ;
+                        },
+                      ),
+                      RadioListTile<String>(
+                        title: const Text('Caretaker'),
+                        value: 'caretaker',
+                        groupValue: groupValue,
+                        onChanged: (value) {
+                          ref.read(typeOfAccountProvider.notifier).update((state) => value!);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text('Selected Value: $groupValue'),
+                      ),
+                    ],
+                  )
+                 ,
                  LoginEmailButton(emailController.text, passwordController.text),
+                  //CREATE ACCOUNT
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -98,12 +141,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         onPressed: () =>  Routemaster.of(context).push('/create-account') ,
                       )
                     ],
-                  ),const SignInButton()
+                  ),
+                  //Google Sign in
+                  const SignInButton()
                 ],
               ),
             ),
             //WITH GOOGLE
-
           ],
         ),
       ),

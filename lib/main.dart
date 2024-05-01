@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mpati_pet_care/features/authentication/screens/login_screen.dart';
 import 'package:mpati_pet_care/features/home/home_page.dart';
+import 'package:mpati_pet_care/models/base_model.dart';
 import 'package:mpati_pet_care/router.dart';
 import 'package:mpati_pet_care/theme/palette.dart';
 import 'package:routemaster/routemaster.dart';
@@ -30,11 +31,11 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  UserModel? userModel;
+  BaseModel? baseModel;
 
   void getData (WidgetRef ref ,User data) async{
-    userModel =await ref.watch(authControllerProvider.notifier).getUserData(data.uid).first;
-    ref.read(userProvider.notifier).update((state) => userModel);
+    baseModel =await ref.watch(authControllerProvider.notifier).findUserInRoleCollections(data.uid)!.first;
+    ref.read(userProvider.notifier).update((state) => baseModel);
     setState(() {
     });
   }
@@ -45,12 +46,11 @@ class _MyAppState extends ConsumerState<MyApp> {
         MaterialApp.router(
       title: 'Mpati Demo',
       debugShowCheckedModeBanner: false,
-
       routerDelegate: RoutemasterDelegate(
           routesBuilder: (context) {
             if (data !=null){
               getData(ref, data);
-              if(userModel != null){
+              if(baseModel != null){
                 return loggedInRoute;
               }
             }
