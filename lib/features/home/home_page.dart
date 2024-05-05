@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mpati_pet_care/core/common/navigation_bar.dart';
@@ -29,7 +30,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context ) {
-    final user = ref.watch(userProvider);
+    UserModel? user = ref.watch(userProvider) as UserModel;
       return Scaffold(
         endDrawerEnableOpenDragGesture: false,
         appBar:AppBar(
@@ -39,21 +40,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             height: 40,),
           actions: [
             //balance
-            Text(user!.mail.toString()),
             Text(user.mail.toString()),
+            Text(user.balance.toString()),
             IconButton(
                 onPressed: () => {
                   Routemaster.of(context).push('/balance-page')
                 },
                 icon:const Icon(Icons.balance)),
             //Profile Snackbar
-            // IconButton(onPressed: () {
-            //
-            // },
-            //   icon: CircleAvatar(
-            //     backgroundImage: NetworkImage(user.profilePic.toString() ),
-            //   ),
-            // ),
+            IconButton(onPressed: () {
+
+            },
+              icon: CircleAvatar(
+                backgroundImage: NetworkImage(user.profilePic.toString() ),
+              ),
+            ),
             //Settings
             Builder(builder: (context) {
               return IconButton(
@@ -62,8 +63,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   icon:const Icon(Icons.settings));
             },
             ),
-
-
           ],
 
         ),
@@ -78,8 +77,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Services(
                     firstBox: "Show Caretakers\nOn Map",
                     secondBox: "Previous Service",
-                    thirdBox: "Explore Caretakers",
-                    fourthBox: "Bills"
+                    thirdBox: "Request Care Taking Service \n",
+                    fourthBox: "Bills",
+                  fifthBox: "My Pets",
+                  sixthBox: "Feature 6",
                 ),
                 //Other thins can be put here
               ],

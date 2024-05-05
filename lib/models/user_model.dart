@@ -12,9 +12,11 @@ class  UserModel extends BaseModel{
   final String? address;
   final List<String> bills;
   final List<String> pets;
+  final List<String> sessionIds;
 
 //<editor-fold desc="Data Methods">
   const UserModel({
+   required this.sessionIds,
     this.name,
     String? mail,
     String? password,
@@ -44,7 +46,8 @@ class  UserModel extends BaseModel{
           address == other.address &&
           type == other.type &&
           bills == other.bills &&
-          pets == other.pets);
+          pets == other.pets &&
+          sessionIds== other.sessionIds);
 
   @override
   int get hashCode =>
@@ -58,7 +61,8 @@ class  UserModel extends BaseModel{
       address.hashCode ^
       type.hashCode ^
       bills.hashCode ^
-      pets.hashCode;
+      pets.hashCode ^
+      sessionIds.hashCode;
 
   @override
   String toString() {
@@ -74,6 +78,7 @@ class  UserModel extends BaseModel{
         ' type: $type,' +
         ' bills: $bills,' +
         ' pets: $pets,' +
+        'sessionId $sessionIds,'+
         '}';
   }
 
@@ -89,6 +94,8 @@ class  UserModel extends BaseModel{
     String? type,
     List<String>? bills,
     List<String>? pets,
+    List<String>? sessionIds,
+
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -102,6 +109,7 @@ class  UserModel extends BaseModel{
       type: type ?? this.type,
       bills: bills ?? this.bills,
       pets: pets ?? this.pets,
+      sessionIds: sessionIds ?? this.sessionIds,
     );
   }
 
@@ -118,6 +126,7 @@ class  UserModel extends BaseModel{
       'type': this.type,
       'bills': this.bills,
       'pets': this.pets,
+      'sessionIds':this.sessionIds,
     };
   }
 
@@ -134,6 +143,7 @@ class  UserModel extends BaseModel{
       type: map['type']  ?? '',
       bills:(map['bills'] != null) ? List<String>.from(map['bills']) : [],
       pets: (map['pets'] != null) ? List<String>.from(map['pets']) : [],
+      sessionIds: (map['sessionIds'] != null) ? List<String>.from(map['sessionIds']) : [],
     );
   }
   String toJson() => json.encode(toMap());
