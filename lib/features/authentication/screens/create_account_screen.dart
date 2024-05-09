@@ -59,7 +59,7 @@ class CreateAccountScreen extends ConsumerWidget {
             value: 'owner',
             groupValue: selectedValue,
             onChanged: (value) {
-              ref.read(typeOfAccountProvider.notifier).state = value!;
+              ref.read(typeOfAccountProvider.notifier).update((state) =>  value!);
             },
           ),
           RadioListTile<String>(
@@ -67,7 +67,7 @@ class CreateAccountScreen extends ConsumerWidget {
             value: 'caretaker',
             groupValue: selectedValue,
             onChanged: (value) {
-              ref.read(typeOfAccountProvider.notifier).state = value!;
+              ref.read(typeOfAccountProvider.notifier).update((state) =>  value!) ;
             },
           ),
           Padding(

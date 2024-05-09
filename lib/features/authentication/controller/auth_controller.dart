@@ -2,10 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mpati_pet_care/models/base_model.dart';
+import 'package:routemaster/routemaster.dart';
 
 import '../../../core/utils.dart';
 import '../../../models/user_model.dart';
 import '../repository/auth_repository.dart';
+import '../screens/role_selection_screen_google.dart';
 
 final userProvider = StateProvider<BaseModel?>((ref) => null);
 final typeOfAccountProvider = StateProvider<String>((ref) => "owner");
@@ -20,10 +22,7 @@ final authStateChangeProvider = StreamProvider((ref) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.authStateChange;
 });
-final getUserDataProvider = StreamProvider.family((ref,String uid){
-  final authController = ref.watch(authControllerProvider.notifier);
-  return authController.findUserInRoleCollections(uid)!;
-});
+
 //final getUserDataProvider = StreamProvider.family<String>((ref,String uid)  {
 //   final authController = ref.watch(authControllerProvider.notifier);
 //   return authController.findUserInRoleCollections(uid);
@@ -56,21 +55,47 @@ class AuthController extends StateNotifier<bool>{
     state = false;
     user.fold(
           (l) => showSnackBar(context, l.message),
-          (userModel) => _ref.read(userProvider.notifier).update((state) => userModel),
+          (baseModel) =>  _ref.read(userProvider.notifier).update((state) => baseModel),
     );
   }
-  void signInWithGoogle(BuildContext context,String type) async {
-    state= true;
-    final user = await _authRepository.signInWithGoogle(type: type);
-    state= false;
-    //This is how we are catching errors
-    user.fold(
-          (l) => showSnackBar(context, l.message),
-          (userModel) => _ref.read(userProvider.notifier).update((state) => userModel),
+  void signInWithGoogle(BuildContext context) async {
+    state = true;
+    final result = await _authRepository.signInWithGoogle(type: _ref.read(typeOfAccountProvider));
+    state = false;
+    result.fold(
+          (failure) {
+        showSnackBar(context, failure.message);
+      },
+          (user) {
+        if (user == null) {
+          // User is new and needs to choose a role
+          Navigator.push(context, MaterialPageRoute(builder: (_) => ChooseTypeScreen(
+            onRoleChosen: (chosenType) {
+              createUserWithType(context, chosenType);
+            },
+          )));
+
+        } else {
+          // Existing user, update the state directly
+          _ref.read(userProvider.notifier).update((state) => user);
+        }
+      },
     );
   }
-  Stream<BaseModel>? findUserInRoleCollections(String uid){
-    return _authRepository.findUserInRoleCollections(uid);
+
+  void createUserWithType(BuildContext context, String type) {
+    _authRepository.createUserWithType(type).then((result) {
+      result.fold(
+            (failure) => showSnackBar(context, failure.message),
+            (user) => _ref.read(userProvider.notifier).update((state) => user),
+      );
+    });
+    Routemaster.of(context).push('/');
+  }
+
+  Stream<BaseModel>? findUserInRoleCollections(String uid,String type){
+    print('girdi');
+    return _authRepository.findUserInRoleCollections(uid,type);
   }
   void logout() async {
     _authRepository.logOut();

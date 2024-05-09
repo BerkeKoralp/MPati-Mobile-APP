@@ -7,6 +7,8 @@ import 'package:mpati_pet_care/features/authentication/screens/login_screen.dart
 import 'package:mpati_pet_care/features/home/home_page.dart';
 import 'package:mpati_pet_care/features/home/petcaretaker/home_page_ptc.dart';
 import 'package:mpati_pet_care/features/map/repository/map_code.dart';
+import 'package:mpati_pet_care/features/profile/user/pet/screen/add_pet_screen.dart';
+import 'package:mpati_pet_care/features/profile/user/pet/screen/user_pets_screen.dart';
 import 'package:routemaster/routemaster.dart';
 
 import 'features/balance/screen/balance_page.dart';
@@ -28,6 +30,9 @@ final loggedInRoute = RouteMap(
       '/' : (_) => const MaterialPage(child: HomeScreen()),
       '/map-screen': (_) =>  const MaterialPage(child: MapScreenCustom()),
       '/balance-page' :(_) => const MaterialPage(child: BalancePage())
-      ,'/session-create-page' :(_) =>  MaterialPage(child: CareTakingScreen())
-    }
+      ,'/session-create-page' :(_) =>  MaterialPage(child: CareTakingScreen()),
+      '/pet-page' :(_) =>  const MaterialPage(child: PetsListScreen()),
+      '/pet-page/pet-add-page' :(_) =>  MaterialPage(child: PetAddScreen())
+
+}
 );

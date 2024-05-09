@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,12 +14,8 @@ class LoginEmailButton extends ConsumerWidget {
 
   void signInWithEmail(WidgetRef ref,BuildContext context,
       {required String email, required String password,required String type}) {
-   print("buttondaki");
-
-   if (kDebugMode) {
-      print(password);
-    }
-    print("buttondaki");
+   print(email);
+    print(password);
     ref.read(authControllerProvider.notifier).
     signInWithEmailAndPassword(
         context,

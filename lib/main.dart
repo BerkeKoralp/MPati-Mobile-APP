@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mpati_pet_care/core/providers/firebase_providers.dart';
 import 'package:mpati_pet_care/features/authentication/screens/login_screen.dart';
 import 'package:mpati_pet_care/features/home/home_page.dart';
 import 'package:mpati_pet_care/models/base_model.dart';
@@ -31,11 +32,13 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+
   BaseModel? baseModel;
 
   void getData (WidgetRef ref ,User data) async{
-    baseModel =await ref.watch(authControllerProvider.notifier).findUserInRoleCollections(data.uid)!.first;
-
+     baseModel =await ref.watch(authControllerProvider.notifier).findUserInRoleCollections(
+        data.uid,
+        ref.read(typeOfAccountProvider))!.first;
     ref.read(userProvider.notifier).update((state) => baseModel);
     setState(() {
     });
@@ -49,16 +52,21 @@ class _MyAppState extends ConsumerState<MyApp> {
       debugShowCheckedModeBanner: false,
       routerDelegate: RoutemasterDelegate(
           routesBuilder: (context) {
-            if (data !=null){
-                getData(ref, data);
-              if(baseModel != null){
+            if (data !=null) {
+                 getData(ref, data);
+              if( baseModel != null){
+                //type a göre route ata ,screen yani
+
+                print(baseModel!.type);
+               // BURADA TYPE A GÖRE ROUTE ATANACAK
+
                   return loggedInRoute;
               }
-            }
+              }
             return loggedOutRoute;
           }
       ),
-      routeInformationParser: RoutemasterParser(),
+      routeInformationParser: const RoutemasterParser(),
     ),
       error: (error, stackTrace) => ErrorText(error: error.toString()) ,
       loading: () => const Loader(),);

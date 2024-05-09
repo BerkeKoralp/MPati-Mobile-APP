@@ -33,7 +33,7 @@ class CareTakingRepository {
       _firestore.collection(FirebaseConstants.petCareTakerCollection);
 
   CollectionReference get _pets =>
-      _firestore.collection(FirebaseConstants.petCollection);
+      _firestore.collection(FirebaseConstants.petsCollection);
 
   FutureEither<bool> validateSessionPreconditions(SessionModel session) async {
     try {
