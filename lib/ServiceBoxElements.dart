@@ -64,9 +64,7 @@ class MyPetsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ServiceBox(nameOfBox: fifthBox,
-      onPressed: () {
-
-      },
+        onPressed: () =>  Routemaster.of(context).push('/pet-page')
     );
   }
 }

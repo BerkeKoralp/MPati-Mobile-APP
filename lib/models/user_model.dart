@@ -11,7 +11,7 @@ class  UserModel extends BaseModel{
   final bool? isAuthenticated;
   final String? address;
   final List<String> bills;
-  final List<String> pets;
+  final List<String> petIds;
   final List<String> sessionIds;
 
 //<editor-fold desc="Data Methods">
@@ -27,7 +27,7 @@ class  UserModel extends BaseModel{
     this.isAuthenticated,
     this.address,
     required this.bills,
-    required this.pets,
+    required this.petIds,
 
   }):super(mail:  mail,password:  password,type: type,uid:  uid);
 
@@ -46,7 +46,7 @@ class  UserModel extends BaseModel{
           address == other.address &&
           type == other.type &&
           bills == other.bills &&
-          pets == other.pets &&
+          petIds == other.petIds &&
           sessionIds== other.sessionIds);
 
   @override
@@ -61,7 +61,7 @@ class  UserModel extends BaseModel{
       address.hashCode ^
       type.hashCode ^
       bills.hashCode ^
-      pets.hashCode ^
+      petIds.hashCode ^
       sessionIds.hashCode;
 
   @override
@@ -77,7 +77,7 @@ class  UserModel extends BaseModel{
         ' address: $address,' +
         ' type: $type,' +
         ' bills: $bills,' +
-        ' pets: $pets,' +
+        ' petIds: $petIds,' +
         'sessionId $sessionIds,'+
         '}';
   }
@@ -108,7 +108,7 @@ class  UserModel extends BaseModel{
       address: address ?? this.address,
       type: type ?? this.type,
       bills: bills ?? this.bills,
-      pets: pets ?? this.pets,
+      petIds: pets ?? this.petIds,
       sessionIds: sessionIds ?? this.sessionIds,
     );
   }
@@ -125,7 +125,7 @@ class  UserModel extends BaseModel{
       'address': this.address,
       'type': this.type,
       'bills': this.bills,
-      'pets': this.pets,
+      'petIds': this.petIds,
       'sessionIds':this.sessionIds,
     };
   }
@@ -142,7 +142,7 @@ class  UserModel extends BaseModel{
       address: map['address']  ?? '',
       type: map['type']  ?? '',
       bills:(map['bills'] != null) ? List<String>.from(map['bills']) : [],
-      pets: (map['pets'] != null) ? List<String>.from(map['pets']) : [],
+      petIds: (map['petIds'] != null) ? List<String>.from(map['petIds']) : [],
       sessionIds: (map['sessionIds'] != null) ? List<String>.from(map['sessionIds']) : [],
     );
   }
