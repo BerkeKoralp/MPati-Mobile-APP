@@ -103,3 +103,18 @@ class RequestSessionButton extends ConsumerWidget {
         onPressed: () =>  Routemaster.of(context).push('/session-create-page'));
   }
 }
+class ChatButton extends StatelessWidget {
+  const ChatButton({
+    super.key,
+    required this.sixthbox,
+  });
+
+  final String sixthbox;
+
+  @override
+  Widget build(BuildContext context) {
+    return ServiceBox(nameOfBox: sixthbox,
+        onPressed: () =>  Routemaster.of(context).push('/chat')
+    );
+  }
+}

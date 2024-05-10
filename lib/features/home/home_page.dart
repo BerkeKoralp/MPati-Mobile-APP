@@ -80,7 +80,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     thirdBox: "Request Care Taking Service \n",
                     fourthBox: "Bills",
                   fifthBox: "My Pets",
-                  sixthBox: "Feature 6",
+                  sixthBox: "Chat",
                 ),
                 //Other thins can be put here
               ],

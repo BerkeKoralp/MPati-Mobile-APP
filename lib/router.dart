@@ -12,6 +12,7 @@ import 'package:mpati_pet_care/features/profile/user/pet/screen/user_pets_screen
 import 'package:routemaster/routemaster.dart';
 
 import 'features/balance/screen/balance_page.dart';
+import 'features/chat/screens/chat_screen.dart';
 import 'features/map/screen/map_screen.dart';
 import 'features/session/screen/session_screen.dart';
 
@@ -27,12 +28,14 @@ final loggedOutRoute = RouteMap(
 );
 final loggedInRoute = RouteMap(
     routes: {
+
       '/' : (_) => const MaterialPage(child: HomeScreen()),
       '/map-screen': (_) =>  const MaterialPage(child: MapScreenCustom()),
       '/balance-page' :(_) => const MaterialPage(child: BalancePage())
       ,'/session-create-page' :(_) =>  MaterialPage(child: CareTakingScreen()),
       '/pet-page' :(_) =>  const MaterialPage(child: PetsListScreen()),
-      '/pet-page/pet-add-page' :(_) =>  MaterialPage(child: PetAddScreen())
-
+      '/pet-page/pet-add-page' :(_) =>  MaterialPage(child: PetAddScreen()),
+      '/chat': (_) => MaterialPage(child: ChatScreen()),//chat screene yönlendirmeyi yapamadım
+      }
 }
 );
