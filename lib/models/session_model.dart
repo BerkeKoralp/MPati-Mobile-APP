@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class SessionModel {
@@ -156,21 +157,21 @@ class SessionModel {
 
   factory SessionModel.fromMap(Map<String, dynamic> map) {
     return SessionModel(
-      id: map['id'] as String,
-      userId: map['userId'] as String,
-      caretakerId: map['caretakerId'] as String,
-      petId: map['petId'] as String,
-      startTime: map['startTime'] as DateTime,
-      endTime: map['endTime'] as DateTime,
-      status: map['status'] as String,
-      statusUpdates: map['statusUpdates'] as List<String>,
-      caretakerFeedback: map['caretakerFeedback'] as String,
-      ownerFeedback: map['ownerFeedback'] as String,
-      caretakerRating: map['caretakerRating'] as int,
-      ownerRating: map['ownerRating'] as int,
-      photoUrls: map['photoUrls'] as List<String>,
-      cost: map['cost'] as double,
-      serviceType: map['serviceType'] as String,
+      id: map['id'] ?? '',
+      userId: map['userId'] ?? '',
+      caretakerId: map['caretakerId'] ?? '',
+      petId: map['petId'] ?? '',
+      startTime: (map['startTime'] as Timestamp).toDate(),
+      endTime: map['endTime'] != null ? (map['endTime'] as Timestamp).toDate() : null,
+      status: map['status'] ?? '',
+      statusUpdates:(map['statusUpdates'] != null) ? List<String>.from(map['statusUpdates']) : [],
+      caretakerFeedback: map['caretakerFeedback'] ?? '',
+      ownerFeedback: map['ownerFeedback'] ?? '',
+      caretakerRating: map['caretakerRating'] ?? 0,
+      ownerRating: map['ownerRating'] ?? 0,
+      photoUrls: (map['photoUrls'] != null) ? List<String>.from(map['photoUrls']) : [],
+      cost: map['cost'] ?? 0.0,
+      serviceType: map['serviceType'] ?? '',
     );
   }
   String toJson() => json.encode(toMap());

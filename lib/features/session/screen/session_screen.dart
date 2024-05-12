@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/common/session_card.dart';
+import '../../../core/providers/firebase_providers.dart';
 import '../../../models/session_model.dart';
+import '../../authentication/controller/auth_controller.dart';
 import '../controller/session_controller.dart';
-import '../controller/session_list_controller.dart';
-
+final sessionListProvider = StreamProvider.family<List<SessionModel>, String>((ref, userId) async* {
+  final stream = ref.read(firestoreProvider).collection('sessions').where('userId', isEqualTo: userId).snapshots();
+  await for (final snapshot in stream) {
+    yield snapshot.docs.map((doc) => SessionModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+  }
+});
 class CareTakingScreen extends ConsumerStatefulWidget {
   @override
   _CareTakingScreenState createState() => _CareTakingScreenState();
@@ -19,73 +25,55 @@ class _CareTakingScreenState extends ConsumerState<CareTakingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(careTakingControllerProvider);
-    final sessionsState = ref.watch(sessionListProvider);
+    final userId = ref.watch(userProvider)!.uid;
+    final sessionsState = ref.watch(sessionListProvider(userId!));
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Initiate Care Taking Session'),
+        title: const Text('Initiate Care Taking Session'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Form(
-          child: Column(
-            children: [
-              ListView(
-                shrinkWrap: true,
-                children: <Widget>[
-                  TextFormField(
-                    controller: _userIdController,
-                    decoration: InputDecoration(labelText: 'User ID'),
-                  ),
-                  TextFormField(
-                    controller: _caretakerIdController,
-                    decoration: InputDecoration(labelText: 'Caretaker ID'),
-                  ),
-                  TextFormField(
-                    controller: _petIdController,
-                    decoration: InputDecoration(labelText: 'Pet ID'),
-                  ),
-                  TextFormField(
-                    controller: _serviceTypeController,
-                    decoration: InputDecoration(labelText: 'Service Type'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _submitSession(),
-                    child: Text('Create/Start Session'),
-                  ),
-                  if (state is AsyncLoading)
-                    CircularProgressIndicator(),
-                  if (state is AsyncError)
-                    Text('Error: ${state.error}', style: TextStyle(color: Colors.red)),
-                  if (state is AsyncData && state.value != null)
-                    Text('Session Created: ${state.value}', style: TextStyle(color: Colors.green)),
-                ],
+        child: Column(
+          children: [
+            TextFormField(
+              controller: _userIdController,
+              decoration: const InputDecoration(labelText: 'User ID'),
+            ),
+            TextFormField(
+              controller: _caretakerIdController,
+              decoration: const InputDecoration(labelText: 'Caretaker ID'),
+            ),
+            TextFormField(
+              controller: _petIdController,
+              decoration: const InputDecoration(labelText: 'Pet ID'),
+            ),
+            TextFormField(
+              controller: _serviceTypeController,
+              decoration: const InputDecoration(labelText: 'Service Type'),
+            ),
+            ElevatedButton(
+              onPressed: () => _submitSession(context),
+              child: const Text('Create/Start Session'),
+            ),
+            Expanded(
+              child: sessionsState.when(
+                data: (sessions) => ListView.builder(
+                  itemCount: sessions.length,
+                  itemBuilder: (_, index) => SessionCard(session: sessions[index]),
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, _) => Center(child: Text('Failed to load session: $e')),
               ),
-    sessionsState.when(
-    data: (List<SessionModel> sessions) {
-         if (sessions.isEmpty) {
-    return Center(child: Text("No sessions available"));
-            }
-            return ListView.builder(
-            itemCount: sessions.length,
-            itemBuilder: (context, index) {
-    // Using the custom SessionCard widget to display each session
-               return SessionCard(session: sessions[index]);
-             },
-           );
-           },
-    loading: () => Center(child: CircularProgressIndicator()),
-    error: (error, stack) => Center(child: Text("Error: ${error.toString()}")),
-    )
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  void _submitSession() {
+
+  void _submitSession(BuildContext context) {
     final session = SessionModel(
       userId: _userIdController.text,
       caretakerId: _caretakerIdController.text,
@@ -93,11 +81,11 @@ class _CareTakingScreenState extends ConsumerState<CareTakingScreen> {
       startTime: DateTime.now(),
       serviceType: _serviceTypeController.text,
       id: '',
-      status: '',
+      status: 'active',
       statusUpdates: [],
       photoUrls: [],
     );
-    ref.read(careTakingControllerProvider.notifier).initiateSession(session);
+    ref.read(careTakingControllerProvider).initiateSession(context,session);
   }
 
   @override

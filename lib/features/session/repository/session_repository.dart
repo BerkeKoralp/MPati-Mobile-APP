@@ -80,7 +80,7 @@ class CareTakingRepository {
     return validation.fold(
             (failure) => left(failure),
             (valid) {
-          if (!valid) {
+          if (!valid) { 
             return left(
                 Failure('Validation failed for user, caretaker, or pet.'));
           }
@@ -107,6 +107,10 @@ class CareTakingRepository {
     await _caretakers.doc(caretakerId).update({
       'sessionIds': FieldValue.arrayUnion([sessionId])
     });
+  }
+
+  Future<void> endSession (SessionModel sessionModel)async {
+
   }
 }
 
