@@ -6,15 +6,9 @@ import 'package:routemaster/routemaster.dart';
 import 'core/common/service_container.dart';
 
 class Services extends StatelessWidget {
-  final String firstBox;
-  final String secondBox;
-  final String thirdBox;
-  final String fourthBox;
-  final String fifthBox;
-  final String sixthBox;
 
   const Services({
-    super.key, required this.firstBox, required this.secondBox, required this.thirdBox, required this.fourthBox, required this.fifthBox, required this.sixthBox,
+    super.key
   });
 
   @override
@@ -22,29 +16,44 @@ class Services extends StatelessWidget {
     return Column(
 
       children: [
-        Row(
+        const Row(
           children: [
-            MapServiceButton(firstBox: firstBox),
-            ServiceBox(nameOfBox: secondBox,onPressed: () {
-
-            },)
+            RequestSessionButton(
+      name:"Request Care Taking Service",
+      width: 300,
+      height: 135, )
           ],
         ),
-        Row(children: [
-          RequestSessionButton(thirdBox:thirdBox )
-          ,ServiceBox(nameOfBox: fourthBox,
+        Row(
+    children: [
+         const MapServiceButton(
+          name: "Show Caretakers \nOn Map",
+          width: 150,
+          height: 135,
+          ),
+          ServiceBox(
+          nameOfBox: "Show \nBills of \nPast Services",
             onPressed: () {
-
           },
-          )
+          width: 150,
+          height: 135,
+    ),
+
         ],
         ),
-        Row(children: [
-          MyPetsButton(fifthBox: fifthBox)
-          ,ServiceBox(nameOfBox: sixthBox,
+        Row(
+          children: [
+          const MyPetsButton(
+          name: "My Pets",
+          width: 150,
+          height: 135,
+    )
+          ,ServiceBox(nameOfBox: "Feature 6",
             onPressed: () {
 
             },
+          width:150,
+          height: 135,
           )
         ],)
 
@@ -56,15 +65,17 @@ class Services extends StatelessWidget {
 class MyPetsButton extends StatelessWidget {
   const MyPetsButton({
     super.key,
-    required this.fifthBox,
+    required this.name, required this.height, required this.width,
   });
 
-  final String fifthBox;
+  final String name;
+  final double height;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
-    return ServiceBox(nameOfBox: fifthBox,
-        onPressed: () =>  Routemaster.of(context).push('/pet-page')
+    return ServiceBox(nameOfBox: name,
+        onPressed: () =>  Routemaster.of(context).push('/pet-page'),height: height,width: width,
     );
   }
 }
@@ -72,10 +83,14 @@ class MyPetsButton extends StatelessWidget {
 class MapServiceButton extends ConsumerWidget {
   const MapServiceButton({
     super.key,
-    required this.firstBox,
+    required this.name,
+    required this.height,
+    required this.width
   });
+  final String name;
+  final double height;
+  final double width;
 
-  final String firstBox;
   void serviceRequest(BuildContext context, WidgetRef ref){
     ref.watch(mapControllerProvider).determinePositionOfUser(context);
   }
@@ -83,23 +98,30 @@ class MapServiceButton extends ConsumerWidget {
   Widget build(BuildContext context,WidgetRef ref) {
     return ServiceBox(
       //Request Service button
-        nameOfBox: firstBox,
-        onPressed: () =>  Routemaster.of(context).push('/map-screen'));
+        nameOfBox: name,
+        onPressed: () =>  Routemaster.of(context).push('/map-screen'),
+        width: width,
+    height: height,);
   }
 }
 
 class RequestSessionButton extends ConsumerWidget {
   const RequestSessionButton({
     super.key,
-    required this.thirdBox,
+    required this.name,
+    required this.height,required this.width
   });
+  final String name;
+  final double height;
+  final double width;
 
-  final String thirdBox;
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     return ServiceBox(
       //Request Service button
-        nameOfBox: thirdBox,
-        onPressed: () =>  Routemaster.of(context).push('/session-create-page'));
+        nameOfBox: name,
+        onPressed: () =>  Routemaster.of(context).push('/session-create-page')
+      ,width: width,
+      height: height,);
   }
 }

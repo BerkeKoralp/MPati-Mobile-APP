@@ -109,7 +109,16 @@ class AuthRepository{
       final credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       //Collection name got and then search for person in each available collection
-      baseModel = await findUserInRoleCollections(credential.user!.uid,type)!.first;
+      BaseModel? baseModel;
+      if(type == 'owner'){
+        baseModel = await getUserData(credential.user!.uid).first;
+      }
+      else if(type == 'caretaker'){
+        baseModel = await getCareTakerData(credential.user!.uid).first;
+      }
+      else {
+        throw Exception("NO CORRECT TYPE SELLECTED");
+      }
       return right(baseModel);
     } on FirebaseAuthException catch (e) {
       return left(Failure(e.toString()));
@@ -132,7 +141,17 @@ class AuthRepository{
         return right(null);
       } else {
         // Existing user, find and return the user
-        BaseModel? baseModel = await findUserInRoleCollections(userCredential.user!.uid,type)!.first;
+        BaseModel? baseModel;
+        if(type == 'owner'){
+          baseModel = await getUserData(userCredential.user!.uid).first;
+        }
+        else if(type == 'caretaker'){
+          baseModel = await getCareTakerData(userCredential.user!.uid).first;
+        }
+        else {
+          throw Exception("NO CORRECT TYPE SELLECTED");
+        }
+        // BaseModel? baseModel = await findUserInRoleCollections(userCredential.user!.uid,type)!.first;
         return right(baseModel);
       }
     } catch (e) {
@@ -186,6 +205,13 @@ class AuthRepository{
       default:
         return 'owner';
     }
+  }
+
+  Stream<UserModel> getUserData(String uid) {
+    return _users.doc(uid).snapshots().map((event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+  Stream<PetCareTakerModel> getCareTakerData(String uid) {
+    return _caretakers.doc(uid).snapshots().map((event) => PetCareTakerModel.fromMap(event.data() as Map<String, dynamic>));
   }
   void logOut() async {
     await _googleSignIn.signOut();

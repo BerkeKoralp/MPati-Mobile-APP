@@ -7,6 +7,7 @@ import 'package:mpati_pet_care/theme/palette.dart';
 // Assuming this is in a file called provider_setup.dart
 final emailControllerProvider = StateProvider<TextEditingController>((ref) => TextEditingController());
 final passwordControllerProvider = StateProvider<TextEditingController>((ref) => TextEditingController());
+final roleControllerProvider = StateProvider<String>((ref) => "");
 
 
 class CreateAccountScreen extends ConsumerWidget {
@@ -16,7 +17,7 @@ class CreateAccountScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final emailController = ref.watch(emailControllerProvider);
     final passwordController = ref.watch(passwordControllerProvider);
-    final String selectedValue = ref.watch(typeOfAccountProvider);
+    final  selectedValue = ref.watch(roleControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +48,7 @@ class CreateAccountScreen extends ConsumerWidget {
                     context,
                     email: credentials['email']!,
                     password: credentials['password']!,
-                    type: ref.watch(typeOfAccountProvider)
+                    type: ref.watch(roleControllerProvider)
                 );
 
               },
@@ -59,7 +60,7 @@ class CreateAccountScreen extends ConsumerWidget {
             value: 'owner',
             groupValue: selectedValue,
             onChanged: (value) {
-              ref.read(typeOfAccountProvider.notifier).update((state) =>  value!);
+              ref.read(roleControllerProvider.notifier).update((state) =>  value!);
             },
           ),
           RadioListTile<String>(
@@ -67,7 +68,7 @@ class CreateAccountScreen extends ConsumerWidget {
             value: 'caretaker',
             groupValue: selectedValue,
             onChanged: (value) {
-              ref.read(typeOfAccountProvider.notifier).update((state) =>  value!) ;
+              ref.read(roleControllerProvider.notifier).update((state) =>  value!) ;
             },
           ),
           Padding(

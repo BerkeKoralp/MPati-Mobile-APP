@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 class PetModel {
-    final String name;
-    final String breed;
-    final String petId;
-    final int age;
-    final String profilePic;
-    final bool vaccine;
-    final double weight;
-    final double height;
-    final List<String> photos;
+    final String? name;
+    final String? breed;
+    final String? petId;
+    final int? age;
+    final String? ownerId;
+    final String? profilePic;
+    final bool? vaccine;
+    final double? weight;
+    final double? height;
+    final List<String>? photos;
+
 
 //<editor-fold desc="Data Methods">
   const PetModel({
@@ -22,6 +24,7 @@ class PetModel {
     required this.weight,
     required this.height,
     required this.photos,
+    required this.ownerId,
   });
 
   @override
@@ -37,7 +40,8 @@ class PetModel {
           vaccine == other.vaccine &&
           weight == other.weight &&
           height == other.height &&
-          photos == other.photos);
+          photos == other.photos &&
+          ownerId == other.ownerId);
 
   @override
   int get hashCode =>
@@ -49,7 +53,8 @@ class PetModel {
       vaccine.hashCode ^
       weight.hashCode ^
       height.hashCode ^
-      photos.hashCode;
+      photos.hashCode ^
+      ownerId.hashCode;
 
   @override
   String toString() {
@@ -63,6 +68,7 @@ class PetModel {
         ' weight: $weight,' +
         ' height: $height,' +
         ' photos: $photos,' +
+        'ownerId: $ownerId,'+
         '}';
   }
 
@@ -76,6 +82,7 @@ class PetModel {
     double? weight,
     double? height,
     List<String>? photos,
+    String? ownerId,
   }) {
     return PetModel(
       name: name ?? this.name,
@@ -87,6 +94,7 @@ class PetModel {
       weight: weight ?? this.weight,
       height: height ?? this.height,
       photos: photos ?? this.photos,
+        ownerId: ownerId ?? this.ownerId,
     );
   }
 
@@ -101,6 +109,7 @@ class PetModel {
       'weight': this.weight,
       'height': this.height,
       'photos': this.photos,
+      'ownerId':this.ownerId,
     };
   }
 
@@ -110,16 +119,17 @@ class PetModel {
       breed: map['breed'] as String,
       petId: map['petId'] as String,
       age: map['age'] as int,
+      ownerId: map['ownerId'] as String,
       profilePic: map['profilePic'] as String,
       vaccine: map['vaccine'] as bool,
-      weight: map['weight'] as double,
-      height: map['height'] as double,
-      photos: map['photos'] as List<String>,
+      weight: (map['weight'] as num).toDouble(),
+      height: (map['height'] as num).toDouble(),
+      photos: List<String>.from(map['photos'] ?? []),
     );
   }
   String toJson() => json.encode(toMap());
 
   factory PetModel.fromJson(String source) => PetModel.fromMap(json.decode(source));
+}
 
 //</editor-fold>
-}

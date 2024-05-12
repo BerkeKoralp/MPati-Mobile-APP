@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mpati_pet_care/core/providers/firebase_providers.dart';
 import 'package:mpati_pet_care/features/authentication/screens/login_screen.dart';
-import 'package:mpati_pet_care/features/home/home_page.dart';
+import 'package:mpati_pet_care/features/home/user/home_page.dart';
 import 'package:mpati_pet_care/models/base_model.dart';
 import 'package:mpati_pet_care/router.dart';
 import 'package:mpati_pet_care/theme/palette.dart';
@@ -33,7 +33,7 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
 
-  BaseModel? baseModel;
+   BaseModel? baseModel;
 
   void getData (WidgetRef ref ,User data) async{
      baseModel =await ref.watch(authControllerProvider.notifier).findUserInRoleCollections(
@@ -43,24 +43,50 @@ class _MyAppState extends ConsumerState<MyApp> {
     setState(() {
     });
   }
+  void getDataUser(WidgetRef ref, User data) async {
+    baseModel =await ref.watch(authControllerProvider.notifier).getUserData(data.uid).first;
+    ref.read(userProvider.notifier).update((state) => baseModel);
+    setState(() {
+    });
+  }
+   void getDataCaretaker(WidgetRef ref, User data) async {
+     baseModel =await ref.watch(authControllerProvider.notifier).getCareTakerData(data.uid).first;
+     ref.read(userProvider.notifier).update((state) => baseModel);
+     setState(() {
+     });
+   }
 
   @override
   Widget build(BuildContext context) {
+    final type = ref.watch(typeOfAccountProvider);
+    final currentTheme = ref.watch(themeNotifierProvider);
     return ref.watch(authStateChangeProvider).when(data: (data) =>
         MaterialApp.router(
       title: 'Mpati Demo',
       debugShowCheckedModeBanner: false,
+      theme: currentTheme,
       routerDelegate: RoutemasterDelegate(
           routesBuilder: (context) {
             if (data !=null) {
-                 getData(ref, data);
+              if(type == 'owner'){
+                getDataUser(ref,data);
+              }else if(type == 'caretaker')
+                {
+                  getDataCaretaker(ref, data);
+                }else {
+                print('Bura geldi');
+                }
+                 // getData(ref, data);
               if( baseModel != null){
                 //type a göre route ata ,screen yani
-
-                print(baseModel!.type);
+                      if(baseModel!.type == 'owner'){
+                        return loggedInRoute;
+                      }
+                      else if( baseModel!.type == 'caretaker'){
+                        print('İlk olarak buraya gelmiş olması lazım route almak için');
+                    return loggedInRouteCareTaker;
+                      }
                // BURADA TYPE A GÖRE ROUTE ATANACAK
-
-                  return loggedInRoute;
               }
               }
             return loggedOutRoute;

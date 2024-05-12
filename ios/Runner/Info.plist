@@ -65,5 +65,11 @@
     <string>Need location access to show on map</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Need location access to show on map</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Our application needs access to your photo gallery for profile picture uploads.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Our application needs access to your photo gallery for profile picture uploads.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Our application needs access to your photo gallery for profile picture uploads.</string>
 </dict>
 </plist>

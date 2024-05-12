@@ -2,15 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mpati_pet_care/models/base_model.dart';
+import 'package:mpati_pet_care/models/pet_caretaker_model.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../core/providers/firebase_providers.dart';
 import '../../../core/utils.dart';
 import '../../../models/user_model.dart';
 import '../repository/auth_repository.dart';
 import '../screens/role_selection_screen_google.dart';
 
 final userProvider = StateProvider<BaseModel?>((ref) => null);
-final typeOfAccountProvider = StateProvider<String>((ref) => "owner");
+final typeOfAccountProvider = StateProvider<String>((ref) => "caretaker");
 final authControllerProvider = StateNotifierProvider<AuthController,bool>(
         (ref) =>
         AuthController(
@@ -23,10 +25,16 @@ final authStateChangeProvider = StreamProvider((ref) {
   return authController.authStateChange;
 });
 
-//final getUserDataProvider = StreamProvider.family<String>((ref,String uid)  {
-//   final authController = ref.watch(authControllerProvider.notifier);
-//   return authController.findUserInRoleCollections(uid);
-// });
+final getUserDataProvider = StreamProvider.family((ref, String uid) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getUserData(uid);
+});
+final getCareTakerDataProvider = StreamProvider.family((ref, String uid) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getCareTakerData(uid);
+});
+
+
 class AuthController extends StateNotifier<bool>{
   final AuthRepository _authRepository;
   final Ref _ref;
@@ -60,7 +68,8 @@ class AuthController extends StateNotifier<bool>{
   }
   void signInWithGoogle(BuildContext context) async {
     state = true;
-    final result = await _authRepository.signInWithGoogle(type: _ref.read(typeOfAccountProvider));
+    final result = await _authRepository.signInWithGoogle(type: _ref.read(typeOfAccountProvider)
+    );
     state = false;
     result.fold(
           (failure) {
@@ -94,9 +103,15 @@ class AuthController extends StateNotifier<bool>{
   }
 
   Stream<BaseModel>? findUserInRoleCollections(String uid,String type){
-    print('girdi');
     return _authRepository.findUserInRoleCollections(uid,type);
   }
+  Stream<UserModel> getUserData(String uid) {
+    return _authRepository.getUserData(uid);
+  }
+  Stream<PetCareTakerModel> getCareTakerData(String uid) {
+    return _authRepository.getCareTakerData(uid);
+  }
+
   void logout() async {
     _authRepository.logOut();
   }

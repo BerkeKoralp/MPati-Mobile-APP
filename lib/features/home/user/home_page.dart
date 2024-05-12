@@ -12,7 +12,7 @@ import 'package:mpati_pet_care/models/user_model.dart';
 import 'package:mpati_pet_care/theme/palette.dart';
 import 'package:routemaster/routemaster.dart';
 
-import '../../ServiceBoxElements.dart';
+import '../../../ServiceBoxElements.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -27,7 +27,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Scaffold.of(context).openEndDrawer();
   }
 
-
+  void navigateToUserProfile(BuildContext context, String uid) {
+    Routemaster.of(context).push('/u/$uid');
+  }
   @override
   Widget build(BuildContext context ) {
     UserModel? user = ref.watch(userProvider) as UserModel;
@@ -35,7 +37,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         endDrawerEnableOpenDragGesture: false,
         appBar:AppBar(
           centerTitle: true,
-          backgroundColor: Palette.nutellaBrown,
           title: Image.asset(Constants.logoPath,
             height: 40,),
           actions: [
@@ -46,10 +47,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onPressed: () => {
                   Routemaster.of(context).push('/balance-page')
                 },
-                icon:const Icon(Icons.balance)),
+                icon:const Icon(Icons.balance)
+            ),
             //Profile Snackbar
-            IconButton(onPressed: () {
-
+            IconButton(
+              onPressed: () {
+                      navigateToUserProfile(context, user.uid!);
             },
               icon: CircleAvatar(
                 backgroundImage: NetworkImage(user.profilePic.toString() ),
@@ -75,12 +78,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Column(
               children: [
                 Services(
-                    firstBox: "Show Caretakers\nOn Map",
-                    secondBox: "Previous Service",
-                    thirdBox: "Request Care Taking Service \n",
-                    fourthBox: "Bills",
-                  fifthBox: "My Pets",
-                  sixthBox: "Feature 6",
                 ),
                 //Other thins can be put here
               ],

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mpati_pet_care/core/providers/firebase_providers.dart';
-import 'package:mpati_pet_care/features/authentication/controller/auth_controller.dart';
-import 'package:mpati_pet_care/models/pet_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:routemaster/routemaster.dart';
-
 import '../../../../../core/common/pet_card.dart';
+import '../../../../../core/providers/firebase_providers.dart';
+import '../../../../../models/pet_model.dart';
+import '../../../../authentication/controller/auth_controller.dart';
 
-final petsProvider = FutureProvider.family<List<PetModel>, String>((ref, userId) async {
-  QuerySnapshot snapshot = await ref.read(firestoreProvider)
-      .collection('pets')
-      .where('ownerId', isEqualTo: userId)
-      .get();
 
-  return snapshot.docs.map((doc) => PetModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+final petsProvider = StreamProvider.family<List<PetModel>, String>((ref, userId) async* {
+  final stream = ref.read(firestoreProvider).collection('pets').where('ownerId', isEqualTo: userId).snapshots();
+  await for (final snapshot in stream) {
+    yield snapshot.docs.map((doc) => PetModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+  }
 });
 
 class PetsListScreen extends ConsumerWidget {
@@ -31,10 +28,7 @@ class PetsListScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {
-              // Navigate to add pet screen
-              Routemaster.of(context).push('/pet-page/pet-add-page');
-            },
+            onPressed: () => Routemaster.of(context).push('/pet-page/pet-add-page'),
           )
         ],
       ),
@@ -43,8 +37,8 @@ class PetsListScreen extends ConsumerWidget {
           itemCount: pets.length,
           itemBuilder: (_, index) => PetCard(pet: pets[index]),
         ),
-        loading: () => Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Failed to load pets')),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Failed to load pets: $e')),
       ),
     );
   }
