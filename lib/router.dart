@@ -12,6 +12,7 @@ import 'package:mpati_pet_care/features/profile/user/pet/screen/user_pets_screen
 import 'package:routemaster/routemaster.dart';
 
 import 'features/balance/screen/balance_page.dart';
+import 'features/chat/screen/chat_screen.dart';
 import 'features/map/screen/map_screen.dart';
 import 'features/profile/user/screen/edit_profile_screen.dart';
 import 'features/profile/user/screen/user_profile_screen.dart';
@@ -31,10 +32,11 @@ final loggedInRoute = RouteMap(
     routes: {
       '/' : (_) => const MaterialPage(child: HomeScreen()),
       '/map-screen': (_) =>  const MaterialPage(child: MapScreenCustom()),
-      '/balance-page' :(_) => const MaterialPage(child: BalancePage())
-      ,'/session-create-page' :(_) =>  MaterialPage(child: CareTakingScreen()),
+      '/balance-page' :(_) => const MaterialPage(child: BalancePage()),
+      '/session-create-page' :(_) =>  MaterialPage(child: CareTakingScreen()),
       '/pet-page' :(_) =>  const MaterialPage(child: PetsListScreen()),
       '/pet-page/pet-add-page' :(_) =>  MaterialPage(child: PetAddScreen()),
+      'chat-page' : (_) => MaterialPage(child: ChatScreen(currentUserId: 'Owner', peerId: 'caretaker')),
        '/edit-profile/:uid': (routeData) => MaterialPage(
                 child: EditProfileScreen(
                       uid: routeData.pathParameters['uid']!,
@@ -51,5 +53,6 @@ final loggedInRoute = RouteMap(
 );
 final loggedInRouteCareTaker = RouteMap(routes: {
   '/' : (_) => const MaterialPage(child: HomeScreenCareTaker()),
+  '/map-screen': (_) =>  const MaterialPage(child: MapScreenCustom()),
 }
 );

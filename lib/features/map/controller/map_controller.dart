@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:mpati_pet_care/features/map/repository/map_repository.dart';
 
 import '../../../core/utils.dart';
+import '../../../models/pet_caretaker_model.dart';
 
 final mapControllerProvider = Provider<MapControllerCustom>(
         (ref) => MapControllerCustom(
@@ -36,9 +37,13 @@ class MapControllerCustom {
     );
    }
 
-  Future<void> determinePositionOfCareTaker(BuildContext context) async {
-    // final positionOfCareTaker= await _ref.read(mapRepositoryProvider).determinePositionOfCareTaker();
-    // positionOfCareTaker.fold((l) => showSnackBar(context, l.message),
-    //         (posOfCareTaker) => _ref.read(careTakerLocationProvider.notifier).update((state) => posOfCareTaker));
+  void fetchCaretakers(BuildContext context) async {
+    try {
+      List<PetCareTakerModel> caretakers = await _mapRepository.fetchPetCareTakers();
+      _ref.read(caretakersProvider.notifier).update((state) => caretakers);
+    } catch (e) {
+      print("Error fetching caretakers: $e");
+      // Optionally handle errors, e.g., show a snack bar or log to analytics
+    }
   }
 }
