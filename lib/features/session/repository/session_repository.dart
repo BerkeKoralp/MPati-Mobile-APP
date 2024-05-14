@@ -93,6 +93,9 @@ class CareTakingRepository {
     try {
       DocumentReference result = await _sessions.add(session.toMap());
       String sessionId = result.id;
+      await _sessions.doc(sessionId).update({
+        'id': sessionId
+      });
       await _updateUserAndCaretakerSessionLinks(sessionId, session.userId, session.caretakerId);
       return right(session.copyWith(id: sessionId));  // Assuming copyWith is implemented to handle ID
     } catch (e) {

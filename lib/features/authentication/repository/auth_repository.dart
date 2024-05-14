@@ -79,6 +79,7 @@ class AuthRepository{
               type: type,
               bills: [],
               session: [],
+              isActive: true
             );
             await _caretakers.doc(baseModel.uid).set(baseModel.toMap());
           }
@@ -104,7 +105,6 @@ class AuthRepository{
   }
   FutureEither<BaseModel> signInWithEmailAndPassword(
       String email, String password,String type) async {
-    BaseModel? baseModel ;
     try {
       final credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -190,6 +190,7 @@ class AuthRepository{
         type: role,
         bills: [],
         session: [],
+        isActive: true,
       );  // Populate with user details
       await _caretakers.doc(user.uid).set(baseModel.toMap());
     }

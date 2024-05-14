@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-
-import '../provider/chat_providers.dart';
+import '../controller/chat_controller.dart';
 import '../repository/chat_parameters.dart';
 
+//session açtığını caretakerde ownerinkini , owner de caretakerınkini alacak userprovider.uid
+// if else userprovider.type ownerse caretakerid alacak
+// routerın içine o girecek
 class ChatScreen extends ConsumerWidget {
   final String currentUserId;
   final String peerId;

@@ -4,5 +4,6 @@ class FirebaseConstants{
   static const sessionCollection = 'sessions';
   static const petsCollection = 'pets';
   static const complaintsCollection = 'complaints' ;
+  static const messagesCollection ='messages';
 
 }

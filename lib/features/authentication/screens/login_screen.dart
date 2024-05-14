@@ -34,11 +34,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     String groupValue = ref.watch(typeOfAccountProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Palette.nutellaBrown,
-        centerTitle: true,
-        title: Image.asset(Constants.logoPath,height: 40),
-      ),
+
       body: Center(
         child: Column(
           children: [
@@ -122,7 +118,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Text('Selected Value: $groupValue'),
+                        child: Text('Selected Role: $groupValue',
+                          style:TextStyle(color: Palette.brown1) ,),
                       ),
                     ],
                   )
@@ -132,11 +129,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text('Does not have account?'),
+                      const Text('Does not have account?',
+                      style: TextStyle(color: Palette.brown1),),
                       TextButton(
                         child: const Text(
                           'Sign in',
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 20
+                          ,fontWeight: FontWeight.bold,
+                          color: Palette.nutellaBrown,fontFamily: 'Acme'),
                         ),
                         onPressed: () =>  Routemaster.of(context).push('/create-account') ,
                       )

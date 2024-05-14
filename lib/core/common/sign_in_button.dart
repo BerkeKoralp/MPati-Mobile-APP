@@ -30,6 +30,7 @@ class SignInButton extends ConsumerWidget {
           "Continiue with Google",
           style: TextStyle(
             fontSize: 18,
+              fontFamily: 'Acme'
           ),
         ),
       ),

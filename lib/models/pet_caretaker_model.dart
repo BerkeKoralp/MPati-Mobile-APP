@@ -12,6 +12,8 @@ class PetCareTakerModel extends BaseModel{
   final String? address;
   final List<String>? session;
   final List<String>? bills;
+  final bool? isActive;
+
 
 //<editor-fold desc="Data Methods">
   const PetCareTakerModel({
@@ -26,6 +28,7 @@ class PetCareTakerModel extends BaseModel{
     this.address,
     this.session,
     this.bills,
+    this.isActive,
   }):super(mail: mail,password: password,type: type , uid: uid);
 
   @override
@@ -40,7 +43,8 @@ class PetCareTakerModel extends BaseModel{
           isAuthenticated == other.isAuthenticated &&
           address == other.address &&
           session == other.session &&
-          bills == other.bills);
+          bills == other.bills &&
+      isActive == other.isActive);
 
   @override
   int get hashCode =>
@@ -51,7 +55,8 @@ class PetCareTakerModel extends BaseModel{
       isAuthenticated.hashCode ^
       address.hashCode ^
       session.hashCode ^
-      bills.hashCode;
+      bills.hashCode ^
+      isActive.hashCode;
 
   @override
   String toString() {
@@ -64,6 +69,7 @@ class PetCareTakerModel extends BaseModel{
         ' address: $address,' +
         ' session: $session,' +
         ' bills: $bills,' +
+        'isActive: $isActive'+
         '}';
   }
 
@@ -76,6 +82,7 @@ class PetCareTakerModel extends BaseModel{
     String? address,
     List<String>? session,
     List<String>? bills,
+    bool? isActive,
   }) {
     return PetCareTakerModel(
       name: name ?? this.name,
@@ -86,6 +93,7 @@ class PetCareTakerModel extends BaseModel{
       address: address ?? this.address,
       session: session ?? this.session,
       bills: bills ?? this.bills,
+      isActive: isActive ?? this.isActive,
     );
   }
 
@@ -102,6 +110,7 @@ class PetCareTakerModel extends BaseModel{
       'type': this.type,
       'mail' :this.mail,
       'password' : this.password,
+      'isActive' : this.isActive,
     };
   }
 
@@ -118,6 +127,7 @@ class PetCareTakerModel extends BaseModel{
       type: map['type']  ?? '',
       session: (map['session'] != null) ? List<String>.from(map['session']) : [],
       bills: (map['bills'] != null) ? List<String>.from(map['bills']) : [],
+      isActive: map['isActive'] as bool,
     );
   }
   String toJson() => json.encode(toMap());

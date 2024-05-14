@@ -36,13 +36,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return Scaffold(
         endDrawerEnableOpenDragGesture: false,
         appBar:AppBar(
-          centerTitle: true,
-          title: Image.asset(Constants.logoPath,
-            height: 40,),
+          title: ClipRRect(
+            borderRadius: BorderRadius.circular(10),  // Sets a moderate rounding effect
+            child: Image.asset(
+              Constants.logoPath,
+              height: 45,  // Specifies the height of the image
+            ),
+          ),
           actions: [
             //balance
-            Text(user.mail.toString()),
-            Text(user.balance.toString()),
+
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(user.balance.toString()+" \$",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
             IconButton(
                 onPressed: () => {
                   Routemaster.of(context).push('/balance-page')
@@ -77,6 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             padding: const EdgeInsets.all(45.0),
             child: Column(
               children: [
+                SizedBox(height: 50,),
                 Services(
                 ),
                 //Other thins can be put here

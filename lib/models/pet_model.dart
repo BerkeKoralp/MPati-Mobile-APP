@@ -120,7 +120,7 @@ class PetModel {
       petId: map['petId'] as String,
       age: map['age'] as int,
       ownerId: map['ownerId'] as String,
-      profilePic: map['profilePic'] as String,
+      profilePic: map['profilePic'] ?? '',
       vaccine: map['vaccine'] as bool,
       weight: (map['weight'] as num).toDouble(),
       height: (map['height'] as num).toDouble(),

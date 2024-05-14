@@ -1,14 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/chatmessage_model.dart';
+import '../model/chat_model.dart';
+import '../model/chat_model.dart';
+import '../repository/chat_parameters.dart';
 import '../repository/chat_repository.dart';
 
-class ChatNotifier extends StateNotifier<List<ChatMessage>> {
+final chatNotifierProvider = StateNotifierProvider.family<ChatNotifierController,
+    List<ChatMessage>, ChatParameters>((ref, params) {
+  final chatRepository = ref.watch(chatRepositoryProvider);
+  return ChatNotifierController(chatRepository, params.currentUserId, params.peerId);
+});
+
+class ChatNotifierController extends StateNotifier<List<ChatMessage>> {
   final ChatRepository _chatRepository;
   final String currentUserId;
   final String peerId;
 
-  ChatNotifier(this._chatRepository, this.currentUserId, this.peerId) : super([]);
+  ChatNotifierController(this._chatRepository, this.currentUserId, this.peerId)
+      : super([]);
 
   void loadMessages() async {
     _chatRepository.getMessages(currentUserId, peerId).listen((messages) {

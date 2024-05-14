@@ -1,7 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/firebase_constants.dart';
-import '../model/chatmessage_model.dart';
+import '../model/chat_model.dart';
+
+
+final chatRepositoryProvider = Provider<ChatRepository>((ref) {
+  return ChatRepository(firestore: FirebaseFirestore.instance);
+});
 
 class ChatRepository {
   final FirebaseFirestore _firestore;
@@ -28,7 +34,7 @@ class ChatRepository {
       'message': message.message,
       'timestamp': message.timestamp,
     });
-  }
+  }//message.toMap();
 
   const ChatRepository({
     required FirebaseFirestore firestore,

@@ -7,9 +7,12 @@ class ServiceBox extends ConsumerWidget {
   final double width;
    VoidCallback? onPressed;
    final String nameOfBox ;
+  final String iconPath ;
+
 
   // Named constructor that accepts a function
-  ServiceBox({ this.onPressed, required this.nameOfBox, required this.height, required this.width});
+  ServiceBox( { this.onPressed, required this.nameOfBox,
+    required this.height, required this.width, required this.iconPath});
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final themeOfCurrent = ref.watch(themeNotifierProvider);
@@ -18,14 +21,27 @@ class ServiceBox extends ConsumerWidget {
       height: height , // Height of the button
       child: ElevatedButton(
         onPressed: onPressed,
-        child: Column(
-          children: [
-            //ICON GELECEK
-            Text(nameOfBox,
-            style: TextStyle(
-              fontSize: 14
-            ),),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(7.5), // This value is half the height to make it fully rounded
+                child: Image.asset(
+                  iconPath,
+                  height: 55,
+                ),
+              ),
+              //ICON GELECEK
+              SizedBox(height: 8,),
+              Text(nameOfBox,
+                textAlign: TextAlign.center,
+              style: TextStyle(
+
+                fontSize: 15
+              ),),
+            ],
+          ),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: themeOfCurrent.cardColor,
