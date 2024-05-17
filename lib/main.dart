@@ -83,7 +83,6 @@ class _MyAppState extends ConsumerState<MyApp> {
                         return loggedInRoute;
                       }
                       else if( baseModel!.type == 'caretaker'){
-                        print('İlk olarak buraya gelmiş olması lazım route almak için');
                     return loggedInRouteCareTaker;
                       }
                // BURADA TYPE A GÖRE ROUTE ATANACAK

@@ -12,13 +12,19 @@ class PetCard extends StatelessWidget {
       margin: EdgeInsets.all(8.0),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(pet.profilePic!),
-          backgroundColor: Colors.grey[200],
-          foregroundImage: pet.profilePic!.isEmpty ? AssetImage('assets/images/default_pet_profile.png') : null,
+            backgroundColor: Colors.transparent,
+            child: SizedBox(
+                width: 60,
+                height: 60,
+                child: ClipOval(
+                  child: Image.asset("assets/images/default_pet_profile.png",
+                  ),
+                )
+            ),
         ),
         title: Text(pet.name!),
         subtitle: Text('${pet.breed} - ${pet.age} years old'),
-        trailing: Icon(Icons.arrow_forward),
+        trailing: const Icon(Icons.arrow_forward),
         onTap: () {
           // Optionally, navigate to a detail screen or perform other actions
         },

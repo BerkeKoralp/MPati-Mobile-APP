@@ -35,7 +35,7 @@ class LoginEmailButton extends ConsumerWidget {
         ),
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          backgroundColor: Colors.blue,
+          backgroundColor: Palette.nutellaBrown,
           minimumSize: const Size(double.infinity, 50),
         ),
         icon: Icon(Icons.login)

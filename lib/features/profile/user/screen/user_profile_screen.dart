@@ -21,7 +21,6 @@ class UserProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return Scaffold(
       body: ref.watch(getUserDataProvider(uid)).when(
           data: (user) => Column(

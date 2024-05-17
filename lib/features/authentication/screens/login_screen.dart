@@ -53,7 +53,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: const Text(
                         'Mpati',
                         style: TextStyle(
-                            color: Colors.blue,
+                            color: Palette.lightBrown1,
                             fontWeight: FontWeight.w500,
                             fontSize: 30),
                       )),
@@ -103,6 +103,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       RadioListTile<String>(
                         title: const Text('Owner'),
                         value: 'owner',
+                        activeColor: Palette.lightBrown1,
                         groupValue: groupValue,
                         onChanged: (value) {
                           ref.read(typeOfAccountProvider.notifier).update((state) => value!) ;
@@ -112,6 +113,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         title: const Text('Caretaker'),
                         value: 'caretaker',
                         groupValue: groupValue,
+                        activeColor: Palette.lightBrown1,
                         onChanged: (value) {
                           ref.read(typeOfAccountProvider.notifier).update((state) => value!);
                         },
