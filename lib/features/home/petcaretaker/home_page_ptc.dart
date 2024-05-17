@@ -81,7 +81,7 @@ class _HomeScreenCareTakerState extends ConsumerState<HomeScreenCareTaker> {
               icon:const Icon(Icons.balance)),
           //Profile Snackbar
           IconButton(onPressed: () {
-
+            Routemaster.of(context).push('/edit-profile/${user.uid}');
           },
             icon: CircleAvatar(
               backgroundImage: NetworkImage(user.profilePic.toString() ),
@@ -103,16 +103,16 @@ class _HomeScreenCareTakerState extends ConsumerState<HomeScreenCareTaker> {
       endDrawer: const SettingDrawer(),
       body:Column(
         children: [
-          sessionsState.when(
-            data: (sessions) => ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: sessions.length,
-              itemBuilder: (_, index) => SessionCard(session: sessions[index]),
-            ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text('Failed to load session: $e')),
-          ),
+          // sessionsState.when(
+          //   data: (sessions) => ListView.builder(
+          //     shrinkWrap: true,
+          //     physics: const NeverScrollableScrollPhysics(),
+          //     itemCount: sessions.length,
+          //     itemBuilder: (_, index) => SessionCard(session: sessions[index]),
+          //   ),
+          //   loading: () => const Center(child: CircularProgressIndicator()),
+          //   error: (e, _) => Center(child: Text('Failed to load session: $e')),
+          // ),
           CaretakerServices()
         ]
       )
