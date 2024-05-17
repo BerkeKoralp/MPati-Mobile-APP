@@ -55,6 +55,10 @@ class CareTakingRepository {
           caretakerData['isAuthenticated'] == true;
       bool petExists = petDoc.exists;
 
+      if(session.status =="active"){
+        return left(Failure("Session is already in use !"));
+      }
+
       if (userActive && caretakerActive && petExists) {
         return right(true); // Conditions are met
       } else {
@@ -65,6 +69,9 @@ class CareTakingRepository {
       return left(
           Failure('Error checking session preconditions: ${e.toString()}'));
     }
+  }
+  Future<void> rateSession(String sessionId, int rating) async {
+    await _sessions.doc(sessionId).update({'ownerRating': rating});
   }
   FutureEither<List<SessionModel>> fetchSessions() async {
     try {
@@ -91,16 +98,25 @@ class CareTakingRepository {
   }
   FutureEither<SessionModel> _tryCreatingSession(SessionModel session) async {
     try {
+      print('Creating session');
       DocumentReference result = await _sessions.add(session.toMap());
       String sessionId = result.id;
       await _sessions.doc(sessionId).update({
-        'id': sessionId
+        'id': sessionId,
+        'status': "active",
       });
       await _updateUserAndCaretakerSessionLinks(sessionId, session.userId, session.caretakerId);
+      await _updateCaretakerActivity(session.caretakerId, false);
       return right(session.copyWith(id: sessionId));  // Assuming copyWith is implemented to handle ID
     } catch (e) {
       return left(Failure('Failed to create session: ${e.toString()}'));
     }
+  }
+
+  Future<void> _updateCaretakerActivity(String caretakerId, bool isActive) async {
+    await _caretakers.doc(caretakerId).update({
+      'isActive': isActive,
+    });
   }
 
   Future<void> _updateUserAndCaretakerSessionLinks(String sessionId, String userId, String caretakerId) async {

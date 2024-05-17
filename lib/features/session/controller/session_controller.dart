@@ -20,13 +20,19 @@ class CareTakingController {
   final CareTakingRepository _careTakingRepository;
   final Ref _ref;
 
+
   Future<void> initiateSession(BuildContext context,SessionModel sessionModel) async {
-    await _careTakingRepository.createSession(sessionModel);
+    await _careTakingRepository.createSession(sessionModel).then(
+            (result) => result.fold(
+                    (failure) => showSnackBar(context, failure.message),
+                    (r) =>   showSnackBar(context, 'Session  Created successfully!')) );
   }
   Future<void> endSession (SessionModel sessionModel) async {
     await _careTakingRepository.endSession(sessionModel);
   }
-
+  Future<void> rateSession(SessionModel sessionModel,int rating)async {
+  await  _careTakingRepository.rateSession(sessionModel.id,rating );
+  }
    CareTakingController({
     required CareTakingRepository repository,
      required Ref ref,

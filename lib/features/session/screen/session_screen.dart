@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mpati_pet_care/models/pet_caretaker_model.dart';
+import 'package:mpati_pet_care/models/pet_model.dart';
+import 'package:mpati_pet_care/theme/palette.dart';
 
 import '../../../core/common/session_card.dart';
 import '../../../core/providers/firebase_providers.dart';
@@ -39,14 +43,21 @@ class CareTakingScreen extends ConsumerStatefulWidget {
 }
 
 class _CareTakingScreenState extends ConsumerState<CareTakingScreen> {
-   String careTakerId="";
-   String petId= "";
+
+  String careTakerId="";
+  String petId= "";
+  double bill=0.0;
+  double weight=1;
+  double height=1;
+  DateTime? selectedDate; // Field to store selected date
+
   @override
   Widget build(BuildContext context) {
     final userId = ref.watch(userProvider)!.uid!;
     final sessionsState = ref.watch(sessionListProvider(userId));
     final caretakers = ref.watch(caretakerListProvider);
     final pets = ref.watch(userPetsDetailsProvider(userId));
+
 
     return Scaffold(
       appBar: AppBar(
@@ -61,9 +72,11 @@ class _CareTakingScreenState extends ConsumerState<CareTakingScreen> {
                 value: null,
                 onChanged: (value) {
                   if (value != null) {
-                      setState(() {
-                        careTakerId = value['uid'];
-                      });
+                    setState(() {
+                      // petCareTakerModel= PetCareTakerModel.fromMap(value);
+                      careTakerId = value['uid'];
+                      // bill = (value['weight']*0.3)+value['height']*0.2;
+                    });
                   }
                 },
                 items: caretakers.when(
@@ -95,6 +108,8 @@ class _CareTakingScreenState extends ConsumerState<CareTakingScreen> {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       setState(() {
                         petId = value['petId'];
+                        weight= value ['weight'];
+                        height = value ['height'];
                       });
                     });
                   }
@@ -106,8 +121,15 @@ class _CareTakingScreenState extends ConsumerState<CareTakingScreen> {
                       child: Row(
                         children: [
                           CircleAvatar(
-                            backgroundImage: NetworkImage(pet['profilePic']),
                             backgroundColor: Colors.transparent,
+                            child: SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: ClipOval(
+                                  child: Image.asset("assets/images/default_pet_profile.png",
+                                  ),
+                                )
+                            ),
                           ),
                           SizedBox(width: 10),
                           Text(pet['name']),
@@ -120,9 +142,24 @@ class _CareTakingScreenState extends ConsumerState<CareTakingScreen> {
                 ),
                 decoration: const InputDecoration(labelText: 'Pet'),
               ),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                    primary: Palette.nutellaBrown
+                ),
+                onPressed: () => _selectDate(context),
+                icon: Icon(Icons.calendar_month),
+                label: const Text('Select Date'),
+              ),
+              Text(selectedDate == null ? 'No Date Chosen' : 'Selected Date: ${selectedDate!.toLocal()}',
+                  style: TextStyle(
+                      color: Colors.red
+                  )),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Palette.nutellaBrown
+                ),
                 onPressed: () => _submitSession(context, userId),
-                child: const Text('Create/Start Session'),
+                child: const Text('Start Care Taking'),
               ),
               sessionsState.when(
                 data: (sessions) => ListView.builder(
@@ -140,6 +177,19 @@ class _CareTakingScreenState extends ConsumerState<CareTakingScreen> {
       ),
     );
   }
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(), // Initial date to show in the picker
+      firstDate: DateTime.now(), // Earliest allowable date
+      lastDate: DateTime(2100), // Latest allowable date
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
   void _submitSession(BuildContext context, String userId) {
     final session = SessionModel(
@@ -149,9 +199,11 @@ class _CareTakingScreenState extends ConsumerState<CareTakingScreen> {
       startTime: DateTime.now(),
       serviceType: 'Service Type', // Example placeholder
       id: '',
-      status: 'active',
+      status: 'deactive',
       statusUpdates: [],
       photoUrls: [],
+      cost: weight*0.3+height*0.5,
+      endTime: selectedDate,
     );
     ref.read(careTakingControllerProvider).initiateSession(context, session);
   }

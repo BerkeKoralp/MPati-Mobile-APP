@@ -19,6 +19,8 @@ class SessionModel {
   final List<String> photoUrls;
   final double? cost;
   final String serviceType;
+  final String? description;
+
 
 //<editor-fold desc="Data Methods">
   const SessionModel({
@@ -37,6 +39,7 @@ class SessionModel {
     required this.photoUrls,
     this.cost,
     required this.serviceType,
+    this.description,
   });
 
   @override
@@ -58,7 +61,8 @@ class SessionModel {
           ownerRating == other.ownerRating &&
           photoUrls == other.photoUrls &&
           cost == other.cost &&
-          serviceType == other.serviceType);
+          serviceType == other.serviceType &&
+          description== other.description);
 
   @override
   int get hashCode =>
@@ -76,7 +80,8 @@ class SessionModel {
       ownerRating.hashCode ^
       photoUrls.hashCode ^
       cost.hashCode ^
-      serviceType.hashCode;
+      serviceType.hashCode ^
+      description.hashCode;
 
   @override
   String toString() {
@@ -96,6 +101,7 @@ class SessionModel {
         ' photoUrls: $photoUrls,' +
         ' cost: $cost,' +
         ' serviceType: $serviceType,' +
+        'description: $description,'
         '}';
   }
 
@@ -115,6 +121,7 @@ class SessionModel {
     List<String>? photoUrls,
     double? cost,
     String? serviceType,
+    String? description,
   }) {
     return SessionModel(
       id: id ?? this.id,
@@ -132,6 +139,7 @@ class SessionModel {
       photoUrls: photoUrls ?? this.photoUrls,
       cost: cost ?? this.cost,
       serviceType: serviceType ?? this.serviceType,
+      description: description ?? this.description,
     );
   }
 
@@ -152,6 +160,7 @@ class SessionModel {
       'photoUrls': this.photoUrls,
       'cost': this.cost,
       'serviceType': this.serviceType,
+      'description' : this.description,
     };
   }
 
@@ -172,6 +181,7 @@ class SessionModel {
       photoUrls: (map['photoUrls'] != null) ? List<String>.from(map['photoUrls']) : [],
       cost: map['cost'] ?? 0.0,
       serviceType: map['serviceType'] ?? '',
+      description: map['description'] ?? '',
     );
   }
   String toJson() => json.encode(toMap());
