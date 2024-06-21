@@ -13,5 +13,5 @@
 - 💬 Chatting between Pet Owner and Pet Caretaker
 - 📍 Location of Pet Caretakers shown in Map for the Pet Owners
 
-## Report of Procect
+## Report of Project
 Link: https://docs.google.com/document/d/1oO6DFY0Svn1q_PVNlAkYC-plgo6nEXQS/edit?usp=sharing&ouid=103093154415576446732&rtpof=true&sd=true
