@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mpati_pet_care/features/authentication/controller/auth_controller.dart';
 import 'package:mpati_pet_care/features/map/controller/map_controller.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:rxdart/transformers.dart';
 
 import 'core/common/service_container.dart';
 import 'core/providers/firebase_providers.dart';

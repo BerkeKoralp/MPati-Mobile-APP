@@ -74,7 +74,6 @@ class _MyAppState extends ConsumerState<MyApp> {
                 {
                   getDataCaretaker(ref, data);
                 }else {
-                print('Bura geldi');
                 }
                  // getData(ref, data);
               if( baseModel != null){
@@ -85,7 +84,6 @@ class _MyAppState extends ConsumerState<MyApp> {
                       else if( baseModel!.type == 'caretaker'){
                     return loggedInRouteCareTaker;
                       }
-               // BURADA TYPE A GÖRE ROUTE ATANACAK
               }
               }
             return loggedOutRoute;
