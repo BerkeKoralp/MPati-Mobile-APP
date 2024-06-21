@@ -12,3 +12,9 @@
 - ⭐ Service establishing between Pet Owner and Pet Caretaker
 - 💬 Chatting between Pet Owner and Pet Caretaker
 - 📍 Location of Pet Caretakers shown in Map for the Pet Owners
+
+## Inside of App
+
+<p align="start">
+  <img src="assets/images/pets_logo.jpg" alt="MPATI Logo" width="200"/>
+</p>
