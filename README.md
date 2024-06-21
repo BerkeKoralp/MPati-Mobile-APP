@@ -1,16 +1,14 @@
-# mpati_pet_care
+# MPATI: Pet Care Mobile Application
+<p align="center">
+  <img src="assets/images/pets_logo.jpg" alt="MPATI Logo" width="200"/>
+</p>
 
-A new Flutter project.
+## Overview
+**MPATI** is an innovative mobile application designed to connect pet owners with responsible pet caretakers in their local area. It aims to provide an affordable and trustworthy method of pet care when owners are away, addressing the high costs and concerns associated with traditional pet care methods.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 Main features
+- ✈️ Multi-platform: Android, iOS
+- 🌙 Dark and light modes
+- ⭐ Service establishing between Pet Owner and Pet Caretaker
+- 💬 Chatting between Pet Owner and Pet Caretaker
+- 📍 Location of Pet Caretakers shown in Map for the Pet Owners
